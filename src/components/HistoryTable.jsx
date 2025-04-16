@@ -8,6 +8,8 @@ import {
   TableRow,
   Paper,
   TableSortLabel,
+  Chip,
+  Typography,
 } from "@mui/material";
 import { WalletContext } from "../context/walletContext";
 import { ethers } from "ethers";
@@ -79,38 +81,86 @@ const HistoryTable = () => {
   });
 
   return (
-    <TableContainer component={Paper} className="w-full">
+    <TableContainer
+      component={Paper}
+      className="mx-auto !w-[96%] !bg-[#1a2232] !rounded-xl overflow-hidden"
+    >
       <Table>
         <TableHead>
-          <TableRow>
-            <TableCell>
+          <TableRow className="!bg-[#1e2235]">
+            <TableCell className="!border-gray-700">
               <TableSortLabel
                 active={orderBy === "id"}
                 direction={orderBy === "id" ? order : "asc"}
                 onClick={() => handleSort("id")}
+                sx={{
+                  color: "white",
+                  "&.MuiTableSortLabel-active": {
+                    color: "#3b82f6",
+                  },
+                  "& .MuiTableSortLabel-icon": {
+                    color: "#3b82f6 !important",
+                  },
+                }}
               >
-                ID
+                <Typography className="font-semibold text-gray-300">
+                  ID
+                </Typography>
               </TableSortLabel>
             </TableCell>
-            <TableCell>Topic</TableCell>
-            <TableCell>Question</TableCell>
-            <TableCell>Winning Option</TableCell>
-            <TableCell>
+            <TableCell className="!border-gray-700">
+              <Typography className="font-semibold text-gray-300">
+                Topic
+              </Typography>
+            </TableCell>
+            <TableCell className="!border-gray-700">
+              <Typography className="font-semibold text-gray-300">
+                Question
+              </Typography>
+            </TableCell>
+            <TableCell className="!border-gray-700">
+              <Typography className="font-semibold text-gray-300">
+                Winning Option
+              </Typography>
+            </TableCell>
+            <TableCell className="!border-gray-700">
               <TableSortLabel
                 active={orderBy === "totalPool"}
                 direction={orderBy === "totalPool" ? order : "asc"}
                 onClick={() => handleSort("totalPool")}
+                sx={{
+                  color: "white",
+                  "&.MuiTableSortLabel-active": {
+                    color: "#3b82f6",
+                  },
+                  "& .MuiTableSortLabel-icon": {
+                    color: "#3b82f6 !important",
+                  },
+                }}
               >
-                Total Pool (ETH)
+                <Typography className="font-semibold text-gray-300">
+                  Total Pool (ETH)
+                </Typography>
               </TableSortLabel>
             </TableCell>
-            <TableCell>
+            <TableCell className="!border-gray-700">
               <TableSortLabel
                 active={orderBy === "timestamp"}
                 direction={orderBy === "timestamp" ? order : "asc"}
                 onClick={() => handleSort("timestamp")}
+                sx={{
+                  color: "white",
+                  "&.MuiTableSortLabel-active": {
+                    color: "#3b82f6",
+                  },
+                  "& .MuiTableSortLabel-icon": {
+                    color: "#3b82f6 !important",
+                  },
+                }}
               >
-                Date
+                <Typography className="font-semibold text-gray-300">
+                  Date
+                </Typography>
               </TableSortLabel>
             </TableCell>
           </TableRow>
@@ -119,15 +169,41 @@ const HistoryTable = () => {
           {sortedQuestions.map((q) => (
             <TableRow
               key={q.id}
-              className="hover:bg-gray-50 dark:hover:bg-gray-700"
+              className="hover:!bg-[#1e2235] transition-colors duration-150"
             >
-              <TableCell>{q.id}</TableCell>
-              <TableCell>{q.topic}</TableCell>
-              <TableCell>{q.question}</TableCell>
-              <TableCell>{q.winningOption}</TableCell>
-              <TableCell>{parseFloat(q.totalPool).toFixed(2)}</TableCell>
-              <TableCell>
-                {new Date(q.timestamp).toLocaleDateString()}
+              <TableCell className="!border-gray-700 !text-gray-300">
+                #{q.id}
+              </TableCell>
+              <TableCell className="!border-gray-700">
+                <Chip
+                  label={q.topic}
+                  size="small"
+                  className="!bg-blue-500/10 !text-blue-400"
+                />
+              </TableCell>
+              <TableCell className="!border-gray-700 !text-gray-300">
+                {q.question}
+              </TableCell>
+              <TableCell className="!border-gray-700">
+                <Chip
+                  label={q.winningOption}
+                  size="small"
+                  className={
+                    q.winningOption === q.options?.[0]
+                      ? "!bg-green-500/10 !text-green-400"
+                      : "!bg-purple-500/10 !text-purple-400"
+                  }
+                />
+              </TableCell>
+              <TableCell className="!border-gray-700 !text-gray-300">
+                {parseFloat(q.totalPool).toFixed(2)}
+              </TableCell>
+              <TableCell className="!border-gray-700 !text-gray-300">
+                {new Date(q.timestamp).toLocaleDateString(undefined, {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })}
               </TableCell>
             </TableRow>
           ))}

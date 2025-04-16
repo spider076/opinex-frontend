@@ -1,20 +1,9 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  RouterProvider,
-} from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
-import { CssBaseline } from "@mui/material";
-import Header from "./components/Header";
-import Sidebar from "./components/Sidebar";
-import Home from "./pages/Home";
-import History from "./pages/History";
-import ProfilePage from "./pages/Profile";
+import { RouterProvider } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import { WalletProvider } from "./context/walletContext";
 import router from "./routes";
 import Wrapper from "./utils/Wrapper";
-import { ToastContainer } from "react-toastify";
 
 function App() {
   const theme = useTheme();

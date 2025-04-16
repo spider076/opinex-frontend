@@ -87,7 +87,7 @@ const ActiveQuestion = () => {
   }
 
   return (
-    <div className='bg-transparent'>
+    <div className="bg-transparent">
       <QuestionCard
         questionData={latestQuestion}
         questionId={questionId}
