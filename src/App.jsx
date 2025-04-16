@@ -13,6 +13,8 @@ import History from "./pages/History";
 import ProfilePage from "./pages/Profile";
 import { WalletProvider } from "./context/walletContext";
 import router from "./routes";
+import Wrapper from "./utils/Wrapper";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const theme = useTheme();
@@ -20,7 +22,9 @@ function App() {
   return (
     <WalletProvider>
       <main className="bg-[#20293C] min-h-screen flex flex-col w-screen">
-        <RouterProvider router={router} />
+        <Wrapper>
+          <RouterProvider router={router} />
+        </Wrapper>
         <footer className="fixed bottom-1 mx-auto w-full text-center text-gray-500 dark:text-gray-400">
           <p>
             Built with ❤️ |{" "}
@@ -41,6 +45,7 @@ function App() {
           </p>
         </footer>
       </main>
+      <ToastContainer />
     </WalletProvider>
   );
 }

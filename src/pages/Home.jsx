@@ -4,7 +4,7 @@ import QuestionCard from "../components/QuestionCard";
 import { WalletContext } from "../context/walletContext";
 import { toast } from "react-toastify";
 
-const Home = () => {
+const ActiveQuestion = () => {
   const { contract, isConnected } = useContext(WalletContext);
   const [latestQuestion, setLatestQuestion] = useState(null);
   const [questionId, setQuestionId] = useState(null);
@@ -87,10 +87,7 @@ const Home = () => {
   }
 
   return (
-    <div>
-      <Typography variant="h4" className="mb-6 text-center">
-        Active Prediction Market
-      </Typography>
+    <div className='bg-transparent'>
       <QuestionCard
         questionData={latestQuestion}
         questionId={questionId}
@@ -100,4 +97,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default ActiveQuestion;

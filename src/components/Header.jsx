@@ -32,9 +32,9 @@ const Header = () => {
   };
 
   return (
-    <AppBar position="static" className="">
+    <AppBar position="static" className="!bg-transparent !shadow-none">
       <Toolbar className="flex justify-around items-center">
-        <Typography variant="h6" className="flex-1 font-bold">
+        <Typography variant="h4" className="flex-1 font-bold">
           Opinex
         </Typography>
         <Box className="flex-end absolute right-0 flex items-center space-x-4">
@@ -49,13 +49,13 @@ const Header = () => {
               </Button>
             </>
           ) : (
-            <Button color="inherit" onClick={handleConnect}>
+            <Button color="green" variant="contained" onClick={handleConnect}>
               Connect Wallet
             </Button>
           )}
-          <IconButton onClick={toggleTheme} color="inherit">
+          {/* <IconButton onClick={toggleTheme} color="inherit">
             {isDarkMode ? <Brightness7 /> : <Brightness4 />}
-          </IconButton>
+          </IconButton> */}
         </Box>
       </Toolbar>
     </AppBar>

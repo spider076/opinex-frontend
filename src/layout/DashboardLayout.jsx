@@ -5,7 +5,7 @@ import Navlinks from "../components/Navlinks";
 
 const DashboardLayout = () => {
   return (
-    <main className="m-0 p-0 flex flex-col justify-center gap-11">
+    <main className="m-0 p-0 flex flex-col justify-center ">
       <Header />
       <Navlinks />
 
