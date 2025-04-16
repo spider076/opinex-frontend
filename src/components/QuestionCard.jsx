@@ -18,6 +18,33 @@ import { ethers } from "ethers";
 import { toast } from "react-toastify";
 import { WalletContext } from "../context/walletContext";
 import { useGetUserTrades, useGetUserTradesById } from "../hooks/useBets";
+import { useCountdown } from "../hooks/useCountdown";
+
+const CountdownTimer = ({ timestamp }) => {
+  const { hours, minutes, seconds, isExpired } = useCountdown(timestamp);
+
+  if (isExpired) {
+    return (
+      <Typography variant="body1" className="text-red-400 flex items-center gap-2">
+        <span className="inline-block w-2 h-2 rounded-full bg-red-400 animate-pulse"></span>
+        Expired
+      </Typography>
+    );
+  }
+
+  return (
+    <Box className="bg-[#1e2235] px-4 py-2 rounded-lg border border-gray-700/50">
+      <Typography variant="body2" className="text-gray-400 mb-1">
+        Time Remaining
+      </Typography>
+      <Typography variant="h6" className="text-white font-mono">
+        {String(hours).padStart(2, '0')}:
+        {String(minutes).padStart(2, '0')}:
+        {String(seconds).padStart(2, '0')}
+      </Typography>
+    </Box>
+  );
+};
 
 const QuestionCard = ({ questionData, questionId, fetchStakes }) => {
   const { contract, account, isConnected } = useContext(WalletContext);
@@ -28,8 +55,10 @@ const QuestionCard = ({ questionData, questionId, fetchStakes }) => {
   const userBet = useGetUserTradesById(questionId);
   console.log("user : ", userBet);
 
-  const { topic, question, options, totalPool, isActive } = questionData;
+  const { topic, question, options, totalPool, isActive, timestamp  } = questionData;
   const predefinedAmounts = [0.1, 0.2, 0.5, 1];
+
+  console.log("temp : ", timestamp );
 
   useEffect(() => {
     if (contract && isActive) {
@@ -114,12 +143,21 @@ const QuestionCard = ({ questionData, questionId, fetchStakes }) => {
     <main>
       <Stack direction="row" spacing={2} className="!shadow-none">
         <Card className="w-full !bg-transparent pl-20 !shadow-none mx-auto mb-6">
-          <Typography variant="h4" className="mt-2 font-bold text-white">
-            {question}
-          </Typography>
-          <Typography variant="h6" className="text-blue-600 dark:text-blue-400">
-            {topic}
-          </Typography>
+          <Stack direction="row" className="flex justify-between items-start">
+            <Stack>
+              <Typography variant="h4" className="mt-2 font-bold text-white">
+                {question}
+              </Typography>
+              <Typography
+                variant="h6"
+                className="text-blue-600 dark:text-blue-400"
+              >
+                {topic}
+              </Typography>
+            </Stack>
+
+            <CountdownTimer timestamp={timestamp} />
+          </Stack>
 
           <Typography
             variant="body2"

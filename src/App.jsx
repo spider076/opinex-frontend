@@ -14,20 +14,21 @@ function App() {
         <Wrapper>
           <RouterProvider router={router} />
         </Wrapper>
-        <footer className="fixed bottom-1 mx-auto w-full text-center text-gray-500 dark:text-gray-400">
+        <footer className="fixed bottom-1 mx-auto w-full text-center  ">
           <p>
             Built with ❤️ |{" "}
-            <a href="https://github.com" className="underline">
+            <a target="_blank" href="https://github.com/spider076/opinex-frontend" className="!text-gray-500 underline">
               GitHub
             </a>{" "}
             |{" "}
-            <a href="https://twitter.com" className="underline">
+            <a href="https://x.com/spider7677" target="_blank" className="underline !text-gray-500">
               Twitter
             </a>{" "}
             |{" "}
             <a
               href="https://sepolia.etherscan.io/address/0xE6dff8960a2BD40365BadC37fdE73cc5511e1d06"
-              className="underline"
+              target="_blank"
+              className="underline !text-gray-500"
             >
               Contract
             </a>
