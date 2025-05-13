@@ -21,10 +21,6 @@ function App() {
               GitHub
             </a>{" "}
             |{" "}
-            <a href="https://x.com/spider7677" target="_blank" className="underline !text-gray-500">
-              Twitter
-            </a>{" "}
-            |{" "}
             <a
               href="https://sepolia.etherscan.io/address/0xE6dff8960a2BD40365BadC37fdE73cc5511e1d06"
               target="_blank"
