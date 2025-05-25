@@ -2,6 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { TrendingUp, TrendingDown } from 'lucide-react';
+import WalletConnect from '@/components/WalletConnect';
 
 const Hero = () => {
   const marketData = [
@@ -39,9 +40,11 @@ const Hero = () => {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 px-8 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
-                Start Trading Now
-              </Button>
+              <WalletConnect>
+                <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 px-8 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+                  Start Trading Now
+                </Button>
+              </WalletConnect>
               <Button size="lg" variant="outline" className="border-2 hover:border-blue-500 hover:text-blue-600 transform hover:scale-105 transition-all duration-300">
                 Watch Demo
               </Button>

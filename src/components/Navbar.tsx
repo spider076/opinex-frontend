@@ -1,8 +1,8 @@
-
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Menu, User, TrendingUp } from 'lucide-react';
+import WalletConnect from '@/components/WalletConnect';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -43,9 +43,11 @@ const Navbar = () => {
                 {item.name}
               </Link>
             ))}
-            <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-              Get Started
-            </Button>
+            <WalletConnect>
+              <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                Get Started
+              </Button>
+            </WalletConnect>
           </div>
 
           {/* Mobile Menu Button */}
@@ -76,9 +78,11 @@ const Navbar = () => {
                   {item.name}
                 </Link>
               ))}
-              <Button className="mx-3 mt-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-                Get Started
-              </Button>
+              <WalletConnect>
+                <Button className="mx-3 mt-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                  Get Started
+                </Button>
+              </WalletConnect>
             </div>
           </div>
         )}
