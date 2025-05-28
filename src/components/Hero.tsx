@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { TrendingUp, TrendingDown } from 'lucide-react';
@@ -30,7 +29,7 @@ const Hero = () => {
               <h1 className="text-4xl md:text-6xl font-bold leading-tight hover:scale-105 transition-transform duration-300">
                 Trade Smarter with{' '}
                 <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent animate-pulse">
-                  OpniNex
+                  OpinEx
                 </span>
               </h1>
               <p className="text-xl text-gray-600 max-w-lg hover:text-gray-800 transition-colors duration-300">
