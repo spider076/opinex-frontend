@@ -1,171 +1,101 @@
-import React from "react";
-import { useGetUserTrades } from "../hooks/useBets";
-import { useGetQuestionById } from "../hooks/useQuestion";
-import {
-  Box,
-  Typography,
-  Button,
-  Card,
-  Stack,
-  Chip,
-  Divider,
-  Grid,
-} from "@mui/material";
-import { ethers } from "ethers";
-import { useContext } from "react";
-import { WalletContext } from "../context/walletContext";
-import { toast } from "react-toastify";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
-import HowToVoteIcon from "@mui/icons-material/HowToVote";
-
-const TradeCard = ({ trade }) => {
-  const { contract } = useContext(WalletContext);
-  const question = useGetQuestionById(trade.questionId);
-
-  const handleWithdraw = async () => {
-    try {
-      const tx = await contract.withdraw(trade.questionId);
-      await tx.wait();
-      toast.success("Withdrawal successful!");
-    } catch (error) {
-      console.error("Withdraw error:", error);
-      const errorMessage =
-        error?.reason || error?.message || "Failed to withdraw";
-      toast.error(`Withdrawal failed: ${errorMessage}`);
-    }
-  };
-
-  if (!question) return null;
-
-  const canWithdraw = question.isActive && trade.amount > 0;
-
-  return (
-    <Card className="w-full !bg-[#1a2232] p-4 rounded-xl mb-4">
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Typography variant="h5" className="text-white font-bold mb-2">
-            {question.question}
-          </Typography>
-          <Typography variant="subtitle2" className="text-blue-400 mb-4">
-            {question.topic}
-          </Typography>
-        </Grid>
-
-        <Grid item xs={12} md={8}>
-          <Stack direction="row" spacing={3} className="mb-4">
-            <Box>
-              <Typography
-                variant="body2"
-                className="text-gray-400 flex items-center gap-2"
-              >
-                <AccountBalanceWalletIcon fontSize="small" />
-                Amount
-              </Typography>
-              <Typography variant="h6" className="text-white">
-                {trade.amount} ETH
-              </Typography>
-            </Box>
-
-            <Box>
-              <Typography
-                variant="body2"
-                className="text-gray-400 flex items-center gap-2"
-              >
-                <HowToVoteIcon fontSize="small" />
-                Your Vote
-              </Typography>
-              <Chip
-                label={trade.option ? trade.option : "N/A"}
-                color={
-                  trade.option === question.options[0] ? "primary" : "success"
-                }
-                className="mt-1"
-              />
-            </Box>
-
-            <Box>
-              <Typography
-                variant="body2"
-                className="text-gray-400 flex items-center gap-2"
-              >
-                <AccessTimeIcon fontSize="small" />
-                Status
-              </Typography>
-              <Chip
-                label={question.isActive ? "Active" : "Ended"}
-                color={question.isActive ? "warning" : "error"}
-                className="mt-1"
-              />
-            </Box>
-          </Stack>
-
-          <Divider className="!border-gray-700 mt-2 !mb-4" />
-
-          <Typography variant="body2" className="text-gray-300">
-            Current Pool: {ethers.formatEther(question.totalPool)} ETH
-          </Typography>
-          <Box className="mt-2">
-            <Typography variant="body2" className="text-gray-300">
-              {question.options[0]}: {question.option1Percent?.toFixed(1)}%
-            </Typography>
-            <Typography variant="body2" className="text-gray-300">
-              {question.options[1]}: {question.option2Percent?.toFixed(1)}%
-            </Typography>
-          </Box>
-        </Grid>
-
-        <Grid item xs={12} md={4} className="flex items-center justify-end">
-          {question.isActive && (
-            <Button
-              variant="contained"
-              onClick={handleWithdraw}
-              disabled={!canWithdraw}
-              fullWidth
-              sx={{
-                backgroundColor: "#2d3348",
-                "&:hover": {
-                  backgroundColor: "#363d54",
-                },
-                "&.Mui-disabled": {
-                  backgroundColor: "#1e2235",
-                  color: "#6b7280",
-                },
-              }}
-            >
-              Withdraw
-            </Button>
-          )}
-        </Grid>
-      </Grid>
-    </Card>
-  );
-};
+import { useState, useEffect, useContext } from "react";
+import { useGetUserTrades, UserTrade } from "../hooks/useBets.ts"; // Ensure .ts or resolved
+import TradeCard from "../components/TradeCard.tsx"; // Ensure .ts or resolved
+import { WalletContext } from "../context/walletContext.ts"; // Ensure .ts or resolved
+import { Skeleton } from "../components/ui/skeleton.tsx"; // Assuming shadcn/ui skeleton
+import { Alert, AlertDescription, AlertTitle } from "../components/ui/alert.tsx"; // Assuming shadcn/ui alert
+import { ListChecks } from "lucide-react"; // Example icon for Alert
 
 const Trades = () => {
-  const trades = useGetUserTrades();
+  const { account, isConnected } = useContext(WalletContext); // Added isConnected and account to check wallet status
+  const trades: UserTrade[] = useGetUserTrades(); // Hook is already typed
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Simulate loading state, in a real app, useGetUserTrades might return a loading status
+  useEffect(() => {
+    // If trades are fetched based on account, loading should depend on account presence
+    if (isConnected && account) {
+        // A simple timeout to simulate network delay for fetching trades
+        // In a real scenario, useGetUserTrades would internally handle its loading state
+        // and possibly return { trades, isLoading, error }
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+        }, 1500); // Adjust delay as needed, or remove if hook provides loading state
+        return () => clearTimeout(timer);
+    } else {
+        setIsLoading(false); // Not connected or no account, so not loading trades
+    }
+  }, [trades, isConnected, account]);
+
+
+  if (!isConnected || !account) {
+    return (
+        <div className="container mx-auto py-6 lg:py-10 text-center">
+             <Alert variant="default" className="max-w-md mx-auto">
+                <ListChecks className="h-5 w-5" />
+                <AlertTitle>Connect Wallet</AlertTitle>
+                <AlertDescription>
+                    Please connect your wallet to view your trades.
+                </AlertDescription>
+            </Alert>
+        </div>
+    );
+  }
+
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto py-6 lg:py-10">
+        <h1 className="text-3xl font-bold mb-6 lg:mb-8 text-center text-foreground">
+          Your Trades
+        </h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <CardSkeleton key={index} />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <Box className="mx-auto px-10 py-2">
-      {/* <Typography variant="h4" className="text-white font-bold mb-6">
+    <div className="container mx-auto py-6 lg:py-10">
+      <h1 className="text-3xl font-bold mb-6 lg:mb-8 text-center text-foreground">
         Your Trades
-      </Typography> */}
-
+      </h1>
       {trades.length === 0 ? (
-        <Card className="w-full bg-[#1a2232] p-8 !rounded-xl text-center">
-          <Typography variant="h6" className="text-gray-400">
-            You haven't made any trades yet
-          </Typography>
-        </Card>
+        <Alert variant="default" className="max-w-lg mx-auto">
+          <ListChecks className="h-5 w-5" />
+          <AlertTitle>No Trades Yet</AlertTitle>
+          <AlertDescription>
+            You haven't made any trades. Once you participate in a question, your trades will appear here.
+          </AlertDescription>
+        </Alert>
       ) : (
-        <Stack spacing={3}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
           {trades.map((trade) => (
             <TradeCard key={trade.questionId} trade={trade} />
           ))}
-        </Stack>
+        </div>
       )}
-    </Box>
+    </div>
   );
 };
+
+// Simple Skeleton for TradeCard
+const CardSkeleton = () => (
+  <div className="bg-card shadow-md rounded-lg p-4 border border-border">
+    <Skeleton className="h-6 w-3/4 mb-2" />
+    <Skeleton className="h-4 w-1/2 mb-4" />
+    <div className="space-y-3">
+      <Skeleton className="h-5 w-full" />
+      <Skeleton className="h-5 w-5/6" />
+      <Skeleton className="h-5 w-4/6" />
+    </div>
+    <div className="flex justify-end mt-4">
+        <Skeleton className="h-10 w-1/3" />
+    </div>
+  </div>
+);
 
 export default Trades;
