@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -10,6 +11,7 @@ const Navbar = () => {
 
   const navItems = [
     { name: 'Home', path: '/' },
+    { name: 'Markets', path: '/markets' },
     { name: 'Trading', path: '/trading' },
     { name: 'Profile', path: '/profile' },
   ];
@@ -45,7 +47,7 @@ const Navbar = () => {
             ))}
             <WalletConnect>
               <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-                Get Started
+                Connect Wallet
               </Button>
             </WalletConnect>
           </div>
@@ -80,7 +82,7 @@ const Navbar = () => {
               ))}
               <WalletConnect>
                 <Button className="mx-3 mt-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-                  Get Started
+                  Connect Wallet
                 </Button>
               </WalletConnect>
             </div>
