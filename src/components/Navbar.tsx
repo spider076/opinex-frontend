@@ -1,13 +1,22 @@
 
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Menu, User, TrendingUp } from 'lucide-react';
 import WalletConnect from '@/components/WalletConnect';
+import { WalletContext } from '../context/walletContext';
+import { toast } from 'sonner';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+
+  const context = useContext(WalletContext);
+
+    console.log('contex t; ', context);
+
+
+  return "hi";
 
   const navItems = [
     { name: 'Home', path: '/' },
@@ -15,6 +24,14 @@ const Navbar = () => {
     { name: 'Trading', path: '/trading' },
     { name: 'Profile', path: '/profile' },
   ];
+
+  const handleConnect = async () => {
+    try {
+      await connectWallet();
+    } catch (error) {
+      toast.error("Failed to connect wallet");
+    }
+  };
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -46,9 +63,21 @@ const Navbar = () => {
               </Link>
             ))}
             <WalletConnect>
-              <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-                Connect Wallet
+            {isConnected ? (
+            <>
+              <p className="hidden md:block">
+                {account.slice(0, 6)}...{account.slice(-4)} |{" "}
+                {parseFloat(balance).toFixed(2)} ETH
+              </p>
+              <Button color="inherit" onClick={disconnectWallet}>
+                Disconnect
               </Button>
+            </>
+          ) : (
+            <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700" color="green" onClick={handleConnect}>
+              Connect Wallet
+            </Button>
+          )}
             </WalletConnect>
           </div>
 
