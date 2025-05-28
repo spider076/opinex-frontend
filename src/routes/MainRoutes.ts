@@ -1,10 +1,10 @@
-import DashboardLayout from "../layout/DashboardLayout.tsx"; // Ensure .tsx or resolved
+import DashboardLayout from "../layout/DashboardLayout"; // Ensure .tsx or resolved
 // import PagesLayout from "../layout/Pages"; // This import was not used
-import History from "../pages/History.tsx"; // Ensure .tsx or resolved
-import NotFoundPage from "../pages/Notfound.tsx"; // Assuming Notfound.tsx exists or will be created
-import ActiveQuestion from "../pages/ActiveQuestion.tsx"; // Ensure .tsx or resolved
-import Trades from "../pages/Trades.tsx"; // Ensure .tsx or resolved
-import ChatPage from "../pages/ChatPage.tsx"; // Import the new ChatPage
+import History from "../pages/History"; // Ensure .tsx or resolved
+import NotFoundPage from "../pages/Notfound"; // Assuming Notfound.tsx exists or will be created
+import ActiveQuestion from "../pages/ActiveQuestion"; // Ensure .tsx or resolved
+import Trades from "../pages/Trades"; // Ensure .tsx or resolved
+import ChatPage from "../pages/ChatPage"; // Import the new ChatPage
 import React from "react"; // Import React for JSX elements
 
 // Define a type for route objects for better type safety

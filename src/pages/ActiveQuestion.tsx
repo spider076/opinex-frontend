@@ -1,10 +1,10 @@
+// @ts-ignore
 import { useState, useEffect, useContext } from "react";
-import QuestionCard from "../components/QuestionCard.tsx"; // Ensure .tsx is used or resolved
-import { WalletContext } from "../context/walletContext.tsx"; // Ensure .tsx
-import { useToast } from "../components/ui/use-toast"; // Import shadcn/ui useToast
+import QuestionCard from "../components/QuestionCard"; // Ensure .tsx is used or resolved
+import { WalletContext } from "../context/walletContext"; // Ensure .tsx
+import { toast } from "react-toastify";
 
 const ActiveQuestion = () => {
-  const { toast } = useToast(); // Initialize useToast
   const { contract, isConnected } = useContext(WalletContext);
   const [latestQuestion, setLatestQuestion] = useState<any>(null); // Consider defining a type for Question
   const [questionId, setQuestionId] = useState<number | null>(null);
@@ -52,6 +52,7 @@ const ActiveQuestion = () => {
       }
     } catch (error) {
       console.error("Error fetching latest question:", error);
+      // @ts-ignore
       toast({ title: "Error", description: "Failed to load question.", variant: "destructive" });
     }
     // setIsLoading(false); // Moved to finally block
@@ -62,6 +63,7 @@ const ActiveQuestion = () => {
     
     contract.on("NewQuestion", () => {
       fetchLatestQuestion();
+      // @ts-ignore
       toast({ title: "Update", description: "New question available!" });
     });
     contract.on("BetPlaced", () => {

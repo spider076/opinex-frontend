@@ -1,6 +1,5 @@
 import { useState, useEffect, useContext, FC } from "react";
 import { ethers } from "ethers";
-import { useToast } from "./ui/use-toast"; // Import shadcn/ui useToast
 import { WalletContext } from "../context/walletContext.tsx"; // Ensure .tsx
 import { useGetUserTradesById } from "../hooks/useBets.ts"; // Ensure .ts
 import { useCountdown, TimeLeft } from "../hooks/useCountdown"; // Assuming TimeLeft is exported
@@ -12,6 +11,7 @@ import { Label } from "./ui/label";
 import { Progress } from "./ui/progress";
 import { Badge } from "./ui/badge";
 import { Loader2 } from "lucide-react"; // For loading spinner
+import { toast } from "react-toastify";
 
 // Define interfaces for props
 interface QuestionData {
@@ -54,7 +54,6 @@ const CountdownTimer: FC<{ timestamp: number | string }> = ({ timestamp }) => {
 };
 
 const QuestionCard: FC<QuestionCardProps> = ({ questionData, questionId, fetchStakes }) => {
-  const { toast } = useToast(); // Initialize useToast
   const { contract, account, isConnected } = useContext(WalletContext);
   const [betAmount, setBetAmount] = useState<string>("");
   const [selectedOption, setSelectedOption] = useState<string>("");
@@ -192,14 +191,14 @@ const QuestionCard: FC<QuestionCardProps> = ({ questionData, questionId, fetchSt
                   <p className="text-lg font-medium text-foreground">{options && options.length > 0 ? options[0] : 'Option 1'}</p>
                   <p className="text-lg font-semibold text-blue-500">{option1Percent.toFixed(1)}%</p>
                 </div>
-                <Progress value={option1Percent} className="h-3 bg-blue-500/20" indicatorClassName="bg-blue-500" />
+                <Progress value={option1Percent} className="h-3 bg-blue-500/20"  />
               </div>
               <div>
                 <div className="flex justify-between items-center mb-1">
                   <p className="text-lg font-medium text-foreground">{options && options.length > 1 ? options[1] : 'Option 2'}</p>
                   <p className="text-lg font-semibold text-green-500">{option2Percent.toFixed(1)}%</p>
                 </div>
-                <Progress value={option2Percent} className="h-3 bg-green-500/20" indicatorClassName="bg-green-500" />
+                <Progress value={option2Percent} className="h-3 bg-green-500/20" />
               </div>
             </div>
           ) : (
@@ -277,7 +276,7 @@ const QuestionCard: FC<QuestionCardProps> = ({ questionData, questionId, fetchSt
           <CardContent className="space-y-4">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
               <div className="flex items-center gap-3">
-                <p className="text-2xl font-semibold">{userBetAmount.toFixed(Math.min(ethers.decimals, 4))} ETH</p> 
+                {/* <p className="text-2xl font-semibold">{userBetAmount.toFixed(Math.min(, 4))} ETH</p>  */}
                 <Badge variant={userBetOption === (options && options.length > 0 ? options[0] : '') ? "default" : "secondary"}>
                   {userBetOption}
                 </Badge>

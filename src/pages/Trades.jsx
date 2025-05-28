@@ -1,14 +1,14 @@
 import { useState, useEffect, useContext } from "react";
-import { useGetUserTrades, UserTrade } from "../hooks/useBets.ts"; // Ensure .ts or resolved
+import { useGetUserTrades } from "../hooks/useBets.ts"; // Ensure .ts or resolved
 import TradeCard from "../components/TradeCard.tsx"; // Ensure .ts or resolved
-import { WalletContext } from "../context/walletContext.ts"; // Ensure .ts or resolved
+import { WalletContext } from "../context/walletContext"; // Ensure .ts or resolved
 import { Skeleton } from "../components/ui/skeleton.tsx"; // Assuming shadcn/ui skeleton
 import { Alert, AlertDescription, AlertTitle } from "../components/ui/alert.tsx"; // Assuming shadcn/ui alert
 import { ListChecks } from "lucide-react"; // Example icon for Alert
 
 const Trades = () => {
   const { account, isConnected } = useContext(WalletContext); // Added isConnected and account to check wallet status
-  const trades: UserTrade[] = useGetUserTrades(); // Hook is already typed
+  const trades = useGetUserTrades(); // Hook is already typed
   const [isLoading, setIsLoading] = useState(true);
 
   // Simulate loading state, in a real app, useGetUserTrades might return a loading status

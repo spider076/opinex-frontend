@@ -1,14 +1,14 @@
 import { RouterProvider } from "react-router-dom";
-import { WalletProvider } from "./context/walletContext.tsx"; // Ensure .tsx
+import { WalletProvider } from "./context/walletContext"; // Ensure .tsx
 import router from "./routes"; // Assuming this is correctly configured
-import Wrapper from "./utils/Wrapper.tsx"; // Ensure .tsx
-import { Toaster } from "./components/ui/toaster"; // Import shadcn/ui Toaster
+import Wrapper from "./utils/Wrapper"; // Ensure .tsx
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
     <WalletProvider>
       <main className="bg-background text-foreground min-h-screen flex flex-col w-screen">
-        <Wrapper>
+        <Wrapper className={""} >
           <RouterProvider router={router} />
         </Wrapper>
         <footer className="fixed bottom-1 mx-auto w-full text-center text-sm text-muted-foreground">
@@ -28,7 +28,7 @@ function App() {
           </p>
         </footer>
       </main>
-      <Toaster />
+      <ToastContainer />
     </WalletProvider>
   );
 }

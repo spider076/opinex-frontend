@@ -3,7 +3,6 @@ import { WalletContext } from "../context/walletContext";
 import { useGetQuestionById, Question } from "../hooks/useQuestion.ts"; // Ensure .ts is used or resolved
 import { UserTrade } from "../hooks/useBets.ts"; // Ensure .ts is used or resolved
 import { ethers } from "ethers";
-import { useToast } from "./ui/use-toast"; // Import shadcn/ui useToast
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
@@ -15,7 +14,6 @@ interface TradeCardProps {
 }
 
 const TradeCard: FC<TradeCardProps> = ({ trade }) => {
-  const { toast } = useToast(); // Initialize useToast
   const { contract } = useContext(WalletContext);
   const question = useGetQuestionById(trade.questionId);
   const [isWithdrawing, setIsWithdrawing] = useState(false);

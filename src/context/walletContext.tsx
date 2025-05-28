@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect, useCallback, ReactNode } from "react";
 import { ethers, BrowserProvider, JsonRpcSigner, Contract } from "ethers";
 import OpinexABI from "../abis/Opinex.json"; // Assuming ABI is correctly located
-import { useToast } from "../components/ui/use-toast"; // Import shadcn/ui useToast
+import { toast } from "react-toastify";
 
 // Replace with your deployed contract address
 const CONTRACT_ADDRESS = import.meta.env.VITE_API_OPINEX_CONTRACT as string;
@@ -27,7 +27,7 @@ interface WalletProviderProps {
 }
 
 export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
-  const { toast } = useToast(); // Initialize useToast
+  // const { toast } = useToast(); // Initialize useToast
   const [provider, setProvider] = useState<BrowserProvider | null>(null);
   const [signer, setSigner] = useState<JsonRpcSigner | null>(null);
   const [contract, setContract] = useState<Contract | null>(null);
