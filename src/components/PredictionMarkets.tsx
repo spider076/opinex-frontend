@@ -3,9 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Users, MessageCircle, Clock, DollarSign, TrendingUp } from 'lucide-react';
+import { Users, MessageCircle, Clock, DollarSign } from 'lucide-react';
 import { useState } from 'react';
 import PredictionModal from '@/components/PredictionModal';
+import { useMarkets } from '@/hooks/useMarkets';
 
 interface PredictionMarketsProps {
   selectedTopic: string | null;
@@ -13,82 +14,28 @@ interface PredictionMarketsProps {
 
 const PredictionMarkets = ({ selectedTopic }: PredictionMarketsProps) => {
   const [selectedMarket, setSelectedMarket] = useState<any>(null);
-
-  const markets = [
-    {
-      id: 1,
-      title: 'Will Bitcoin reach $70,000 by end of month?',
-      topic: 'Bitcoin Price',
-      description: 'Based on current market trends and recent social media buzz',
-      totalPool: '$12,450',
-      participants: 234,
-      timeRemaining: '5 days',
-      yesVotes: 156,
-      noVotes: 78,
-      yesPrice: 0.65,
-      noPrice: 0.35,
-      fee: '0.1%',
-      status: 'active',
-      category: 'Crypto'
-    },
-    {
-      id: 2,
-      title: 'Fed will raise interest rates next meeting?',
-      topic: 'Federal Reserve Decision',
-      description: 'Prediction based on economic indicators and Fed communications',
-      totalPool: '$8,920',
-      participants: 187,
-      timeRemaining: '12 days',
-      yesVotes: 95,
-      noVotes: 92,
-      yesPrice: 0.51,
-      noPrice: 0.49,
-      fee: '0.1%',
-      status: 'active',
-      category: 'Economics'
-    },
-    {
-      id: 3,
-      title: 'AI regulation bill passes this quarter?',
-      topic: 'AI Regulation Bill',
-      description: 'Congressional prediction market on AI legislation timeline',
-      totalPool: '$6,780',
-      participants: 143,
-      timeRemaining: '25 days',
-      yesVotes: 89,
-      noVotes: 54,
-      yesPrice: 0.62,
-      noPrice: 0.38,
-      fee: '0.1%',
-      status: 'active',
-      category: 'Technology'
-    },
-    {
-      id: 4,
-      title: 'Tesla stock above $250 next week?',
-      topic: 'Tesla Earnings',
-      description: 'Post-earnings prediction for Tesla stock performance',
-      totalPool: '$15,600',
-      participants: 312,
-      timeRemaining: '7 days',
-      yesVotes: 198,
-      noVotes: 114,
-      yesPrice: 0.63,
-      noPrice: 0.37,
-      fee: '0.1%',
-      status: 'active',
-      category: 'Stocks'
-    }
-  ];
-
-  const filteredMarkets = selectedTopic 
-    ? markets.filter(market => market.topic === selectedTopic)
-    : markets;
+  const { markets, loading } = useMarkets(selectedTopic);
 
   const getYesPercentage = (market: any) => {
-    const total = market.yesVotes + market.noVotes;
-    return total > 0 ? (market.yesVotes / total) * 100 : 50;
+    const total = market.yes_votes + market.no_votes;
+    return total > 0 ? (market.yes_votes / total) * 100 : 50;
   };
+
+  const formatTimeRemaining = (endDate: string) => {
+    const now = new Date();
+    const end = new Date(endDate);
+    const diff = end.getTime() - now.getTime();
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    return `${days} days`;
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-lg text-gray-500">Loading markets...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -97,12 +44,12 @@ const PredictionMarkets = ({ selectedTopic }: PredictionMarketsProps) => {
           {selectedTopic ? `Markets for "${selectedTopic}"` : 'All Active Markets'}
         </h2>
         <Badge variant="secondary" className="text-sm">
-          {filteredMarkets.length} markets
+          {markets.length} markets
         </Badge>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {filteredMarkets.map((market, index) => (
+        {markets.map((market, index) => (
           <Card 
             key={market.id} 
             className="hover:shadow-xl transition-all duration-500 cursor-pointer transform hover:scale-[1.02] hover:-translate-y-1 border hover:border-blue-300 animate-fade-in"
@@ -127,7 +74,7 @@ const PredictionMarkets = ({ selectedTopic }: PredictionMarketsProps) => {
               <div className="grid grid-cols-3 gap-4 text-sm">
                 <div className="flex items-center gap-2 text-green-600">
                   <DollarSign className="w-4 h-4" />
-                  <span className="font-medium">{market.totalPool}</span>
+                  <span className="font-medium">${market.total_pool}</span>
                 </div>
                 <div className="flex items-center gap-2 text-blue-600">
                   <Users className="w-4 h-4" />
@@ -135,7 +82,7 @@ const PredictionMarkets = ({ selectedTopic }: PredictionMarketsProps) => {
                 </div>
                 <div className="flex items-center gap-2 text-purple-600">
                   <Clock className="w-4 h-4" />
-                  <span>{market.timeRemaining}</span>
+                  <span>{formatTimeRemaining(market.end_date)}</span>
                 </div>
               </div>
 
@@ -147,8 +94,8 @@ const PredictionMarkets = ({ selectedTopic }: PredictionMarketsProps) => {
                 </div>
                 <Progress value={getYesPercentage(market)} className="h-2" />
                 <div className="flex justify-between text-xs text-gray-500">
-                  <span>{market.yesVotes} votes</span>
-                  <span>{market.noVotes} votes</span>
+                  <span>{market.yes_votes} votes</span>
+                  <span>{market.no_votes} votes</span>
                 </div>
               </div>
 
@@ -178,7 +125,7 @@ const PredictionMarkets = ({ selectedTopic }: PredictionMarketsProps) => {
 
               {/* Fee Info */}
               <div className="text-xs text-gray-500 text-center pt-2 border-t">
-                Platform fee: {market.fee} of winnings
+                Platform fee: {market.fee_percentage}% of winnings
               </div>
             </CardContent>
           </Card>

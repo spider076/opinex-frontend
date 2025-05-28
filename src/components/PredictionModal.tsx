@@ -6,9 +6,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Progress } from '@/components/ui/progress';
-import { Users, MessageCircle, DollarSign, TrendingUp, Send } from 'lucide-react';
+import { Users, MessageCircle, DollarSign, Send } from 'lucide-react';
 import { useState } from 'react';
-import { useToast } from '@/hooks/use-toast';
+import { useBetting } from '@/hooks/useBetting';
+import { useChat } from '@/hooks/useChat';
 
 interface PredictionModalProps {
   market: any;
@@ -20,54 +21,34 @@ const PredictionModal = ({ market, onClose }: PredictionModalProps) => {
   const [prediction, setPrediction] = useState<'yes' | 'no' | null>(null);
   const [message, setMessage] = useState('');
   const [isPlacingBet, setIsPlacingBet] = useState(false);
-  const { toast } = useToast();
-
-  // Mock chat messages
-  const chatMessages = [
-    { user: 'CryptoTrader', message: 'Looking at the charts, I think YES is likely', time: '2m ago', prediction: 'yes' },
-    { user: 'MarketAnalyst', message: 'Fed signals suggest otherwise', time: '5m ago', prediction: 'no' },
-    { user: 'AIEnthusiast', message: 'The momentum is strong for this bill', time: '8m ago', prediction: 'yes' },
-    { user: 'TechGuru', message: 'Congress moves slowly on tech issues', time: '12m ago', prediction: 'no' },
-  ];
+  
+  const { placeBet } = useBetting();
+  const { messages, sendMessage } = useChat(market.id);
 
   const handlePlaceBet = async () => {
-    if (!betAmount || !prediction) {
-      toast({
-        title: "Error",
-        description: "Please enter an amount and select your prediction",
-        variant: "destructive",
-      });
-      return;
-    }
+    if (!betAmount || !prediction) return;
 
     setIsPlacingBet(true);
+    const success = await placeBet(market.id, prediction, parseFloat(betAmount));
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    toast({
-      title: "Bet Placed!",
-      description: `You predicted ${prediction.toUpperCase()} with $${betAmount}`,
-    });
-    
+    if (success) {
+      onClose();
+    }
     setIsPlacingBet(false);
-    onClose();
   };
 
-  const sendMessage = () => {
+  const handleSendMessage = async () => {
     if (!message.trim()) return;
     
-    toast({
-      title: "Message Sent",
-      description: "Your message has been added to the discussion",
-    });
-    
-    setMessage('');
+    const success = await sendMessage(message, prediction || undefined);
+    if (success) {
+      setMessage('');
+    }
   };
 
   const getYesPercentage = () => {
-    const total = market.yesVotes + market.noVotes;
-    return total > 0 ? (market.yesVotes / total) * 100 : 50;
+    const total = market.yes_votes + market.no_votes;
+    return total > 0 ? (market.yes_votes / total) * 100 : 50;
   };
 
   return (
@@ -125,12 +106,12 @@ const PredictionModal = ({ market, onClose }: PredictionModalProps) => {
                     <div className="flex justify-between">
                       <span>Potential Return:</span>
                       <span className="font-medium">
-                        ${(parseFloat(betAmount) * (prediction === 'yes' ? 1/market.yesPrice : 1/market.noPrice)).toFixed(2)}
+                        ${(parseFloat(betAmount) * (prediction === 'yes' ? 1/market.yes_price : 1/market.no_price)).toFixed(2)}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Platform Fee (0.1%):</span>
-                      <span>${(parseFloat(betAmount) * 0.001).toFixed(2)}</span>
+                      <span>Platform Fee ({market.fee_percentage}%):</span>
+                      <span>${(parseFloat(betAmount) * (market.fee_percentage / 100)).toFixed(2)}</span>
                     </div>
                   </div>
                 )}
@@ -152,15 +133,11 @@ const PredictionModal = ({ market, onClose }: PredictionModalProps) => {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span>Total Pool:</span>
-                    <span className="font-medium">{market.totalPool}</span>
+                    <span className="font-medium">${market.total_pool}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Participants:</span>
                     <span>{market.participants}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Time Remaining:</span>
-                    <span>{market.timeRemaining}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Category:</span>
@@ -177,22 +154,26 @@ const PredictionModal = ({ market, onClose }: PredictionModalProps) => {
               <CardContent className="p-4 h-full flex flex-col">
                 <h4 className="font-medium mb-3 flex items-center gap-2">
                   <MessageCircle className="w-4 h-4" />
-                  Live Discussion ({chatMessages.length})
+                  Live Discussion ({messages.length})
                 </h4>
                 
                 <div className="flex-1 overflow-y-auto space-y-3">
-                  {chatMessages.map((msg, index) => (
-                    <div key={index} className="p-2 bg-gray-50 rounded-lg">
+                  {messages.map((msg) => (
+                    <div key={msg.id} className="p-2 bg-gray-50 rounded-lg">
                       <div className="flex items-center justify-between mb-1">
-                        <span className="font-medium text-sm">{msg.user}</span>
+                        <span className="font-medium text-sm">{msg.username}</span>
                         <div className="flex items-center gap-2">
-                          <Badge 
-                            variant={msg.prediction === 'yes' ? 'default' : 'secondary'}
-                            className={`text-xs ${msg.prediction === 'yes' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
-                          >
-                            {msg.prediction.toUpperCase()}
-                          </Badge>
-                          <span className="text-xs text-gray-500">{msg.time}</span>
+                          {msg.prediction && (
+                            <Badge 
+                              variant={msg.prediction === 'yes' ? 'default' : 'secondary'}
+                              className={`text-xs ${msg.prediction === 'yes' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
+                            >
+                              {msg.prediction.toUpperCase()}
+                            </Badge>
+                          )}
+                          <span className="text-xs text-gray-500">
+                            {new Date(msg.created_at).toLocaleTimeString()}
+                          </span>
                         </div>
                       </div>
                       <p className="text-sm text-gray-700">{msg.message}</p>
@@ -209,7 +190,7 @@ const PredictionModal = ({ market, onClose }: PredictionModalProps) => {
                     className="flex-1"
                   />
                   <Button 
-                    onClick={sendMessage}
+                    onClick={handleSendMessage}
                     size="sm"
                     className="self-end"
                   >
