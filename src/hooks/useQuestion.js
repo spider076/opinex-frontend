@@ -12,7 +12,7 @@ export const useGetQuestionById = (questionId) => {
           const data = await contract.getQuestion(questionId);
 
           setQuestion(data);
-        } catch (error) {
+      } catch (error) {
           console.error("Error fetching user bet:", error);
         }
       }

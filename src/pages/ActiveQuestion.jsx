@@ -9,8 +9,13 @@ const ActiveQuestion = () => {
   const [latestQuestion, setLatestQuestion] = useState(null);
   const [questionId, setQuestionId] = useState(null);
 
+  async function temp() {
+      console.log("contract : ", contract);
+  }
+
   useEffect(() => {
     if (contract) {
+      temp();
       fetchLatestQuestion();
       setupEventListeners();
     }
@@ -22,35 +27,52 @@ const ActiveQuestion = () => {
   }, [contract]);
 
   const fetchLatestQuestion = async () => {
-    try {
+    try {      
       const questionCountBigInt = await contract.getQuestionsCount();
       const questionCount = Number(questionCountBigInt);
-      console.log("question : ", questionCount);
+      
       if (questionCount > 0) {
         const id = questionCount - 1;
-        const [
-          topic,
-          question,
-          options,
-          timestamp,
-          isActive,
-          totalPool,
-          winningOption,
-        ] = await contract.getQuestion(id);
-        setLatestQuestion({
-          topic,
-          question,
-          options,
-          timestamp: Number(timestamp),
-          isActive,
-          totalPool,
-          winningOption,
-        });
-        setQuestionId(id);
+        try {
+          const [
+            topic,
+            question,
+            options,
+            timestamp,
+            isActive,
+            totalPool,
+            winningOption,
+          ] = await contract.getQuestion(id);
+          
+          setLatestQuestion({
+            topic,
+            question,
+            options,
+            timestamp: Number(timestamp),
+            isActive,
+            totalPool,
+            winningOption,
+          });
+          setQuestionId(id);
+        } catch (questionError) {
+          console.error("Error fetching specific question:", {
+            error: questionError,
+            errorMessage: questionError.message,
+            errorReason: questionError.reason,
+            errorCode: questionError.code,
+          });
+          throw questionError;
+        }
       }
     } catch (error) {
-      console.error("Error fetching latest question:", error);
-      toast.error("Failed to load question");
+      console.error("Error details:", {
+        message: error.message,
+        reason: error.reason,
+        code: error.code,
+        method: error.method,
+        transaction: error.transaction
+      });
+      toast.error(`Failed to load question: ${error.reason || error.message}`);
     }
   };
 

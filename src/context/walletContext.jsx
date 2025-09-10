@@ -29,27 +29,81 @@ export const WalletProvider = ({ children }) => {
           return;
         }
 
-        const contract = new ethers.Contract(
-          CONTRACT_ADDRESS,
-          OpinexABI,
-          signer
-        );
+        try {
+          console.log("Creating contract instance...");
+          const contract = new ethers.Contract(
+            CONTRACT_ADDRESS,
+            OpinexABI,
+            signer
+          );
 
-        console.log("contract : ", contract);
+          // Verify contract code exists at address
+          const code = await provider.getCode(CONTRACT_ADDRESS);
+          if (code === "0x") {
+            console.error("No contract code found at address:", CONTRACT_ADDRESS);
+            toast.error("No contract found at specified address");
+            return;
+          }
 
-        setProvider(provider);
-        setSigner(signer);
-        setContract(contract);
-        setAccount(accounts[0]);
-        setIsConnected(true);
-        setNetworkError(null);
+          console.log(
+            "Contract code exists, attempting to call getQuestionsCount..."
+          );
 
-        const balance = await provider.getBalance(accounts[0]);
-        setBalance(ethers.formatEther(balance));
+          // Verify contract connection by calling a view function
+          try {
+            const tx = contract.getQuestionsCount.fragment;
+            console.log("getQuestionsCount function signature:", tx.selector);
 
-        localStorage.setItem("isWalletConnected", "true");
+            const count = await contract.getQuestionsCount();
+            console.log("Questions count:", count);
+            console.log("Contract connection verified successfully");
+          } catch (contractError) {
+            console.error("Contract call error details:", {
+              errorSignature: contractError.data, // This might show which function failed
+              errorData: contractError.data,
+              message: contractError.message,
+              reason: contractError.reason,
+              code: contractError.code,
+              method: contractError.method,
+              transaction: contractError.transaction,
+            });
 
-        toast.success("Wallet connected!");
+            // Try to decode the error
+            if (contractError.data) {
+              try {
+                const iface = new ethers.Interface(OpinexABI);
+                const decodedError = iface.parseError(contractError.data);
+                console.log("Decoded error:", decodedError);
+              } catch (e) {
+                console.log("Could not decode error data", e);
+              }
+            }
+
+            toast.error(
+              "Failed to interact with contract. Please verify contract address and ABI"
+            );
+            return;
+          }
+
+          setProvider(provider);
+          setSigner(signer);
+          setContract(contract);
+          setAccount(accounts[0]);
+          setIsConnected(true);
+          setNetworkError(null);
+
+          const balance = await provider.getBalance(accounts[0]);
+          setBalance(ethers.formatEther(balance));
+
+          localStorage.setItem("isWalletConnected", "true");
+          toast.success("Wallet connected!");
+        } catch (contractError) {
+          console.error("Contract creation failed:", contractError);
+          toast.error(
+            "Failed to initialize contract. Please verify contract address"
+          );
+          return;
+        }
       } catch (error) {
         console.error("Connection error:", error);
         toast.error("Failed to connect wallet");

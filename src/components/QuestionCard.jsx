@@ -49,12 +49,10 @@ const QuestionCard = ({ questionData, questionId }) => {
   const [stakes, setStakes] = useState({ option1: 0, option2: 0 });
 
   const userBet = useGetUserTradesById(questionId);
-  console.log("user : ", userBet);
 
   const { topic, question, options, totalPool, isActive, timestamp  } = questionData;
   const predefinedAmounts = [0.1, 0.2, 0.5, 1];
 
-  console.log("temp : ", timestamp );
 
   useEffect(() => {
     if (contract && isActive) {
@@ -262,7 +260,7 @@ const QuestionCard = ({ questionData, questionId }) => {
         <>
           <Box className="mt-4 bg-transparent rounded-xl py-8 px-4">
             <Grid container spacing={2} className="mb-6">
-              {options.map((option, index) => (
+              {options.map((option) => (
                 <Grid item xs={options.length > 2 ? 12 : 6} key={option}>
                   <Button
                     fullWidth
