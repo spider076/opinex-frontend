@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { ethers } from "ethers";
 import { useContext } from "react";
-import { WalletContext } from "../context/walletContext";
+import { WalletContext } from "../context/wallet-states";
 import { toast } from "react-toastify";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";

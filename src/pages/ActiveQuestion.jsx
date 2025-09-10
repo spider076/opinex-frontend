@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { Typography } from "@mui/material";
 import QuestionCard from "../components/QuestionCard";
-import { WalletContext } from "../context/walletContext";
+import { WalletContext } from "../context/wallet-states";
 import { toast } from "react-toastify";
 
 const ActiveQuestion = () => {

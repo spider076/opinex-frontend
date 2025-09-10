@@ -1,23 +1,19 @@
-import { useState, useEffect, useContext } from "react";
 import {
-  Card,
-  CardContent,
-  Typography,
-  Button,
-  TextField,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-  LinearProgress,
   Box,
-  Grid,
-  Stack,
+  Button,
+  Card,
   Chip,
+  Grid,
+  LinearProgress,
+  Stack,
+  TextField,
+  Typography
 } from "@mui/material";
 import { ethers } from "ethers";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { WalletContext } from "../context/walletContext";
-import { useGetUserTrades, useGetUserTradesById } from "../hooks/useBets";
+import { WalletContext } from "../context/wallet-states";
+import { useGetUserTradesById } from "../hooks/useBets";
 import { useCountdown } from "../hooks/useCountdown";
 
 const CountdownTimer = ({ timestamp }) => {
@@ -46,8 +42,8 @@ const CountdownTimer = ({ timestamp }) => {
   );
 };
 
-const QuestionCard = ({ questionData, questionId, fetchStakes }) => {
-  const { contract, account, isConnected } = useContext(WalletContext);
+const QuestionCard = ({ questionData, questionId }) => {
+  const { contract, isConnected } = useContext(WalletContext);
   const [betAmount, setBetAmount] = useState("");
   const [selectedOption, setSelectedOption] = useState("");
   const [stakes, setStakes] = useState({ option1: 0, option2: 0 });

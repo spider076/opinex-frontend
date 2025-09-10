@@ -1,12 +1,8 @@
-import React, { createContext, useState, useEffect, useCallback } from "react";
 import { ethers } from "ethers";
-import OpinexABI from "../abis/Opinex.json";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-
-// Replace with your deployed contract address
-const CONTRACT_ADDRESS = import.meta.env.VITE_API_OPINEX_CONTRACT;
-
-export const WalletContext = createContext();
+import OpinexABI from "../abis/Opinex.json";
+import { CONTRACT_ADDRESS, WalletContext } from "./wallet-states";
 
 export const WalletProvider = ({ children }) => {
   const [provider, setProvider] = useState(null);
@@ -16,6 +12,8 @@ export const WalletProvider = ({ children }) => {
   const [balance, setBalance] = useState("0");
   const [isConnected, setIsConnected] = useState(false);
   const [networkError, setNetworkError] = useState(null);
+
+  console.log("Opinex Smart Contract :: ", CONTRACT_ADDRESS);
 
   const connectWallet = useCallback(async () => {
     if (window.ethereum) {
@@ -36,6 +34,8 @@ export const WalletProvider = ({ children }) => {
           OpinexABI,
           signer
         );
+
+        console.log("contract : ", contract);
 
         setProvider(provider);
         setSigner(signer);

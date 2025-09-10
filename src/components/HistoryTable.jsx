@@ -11,7 +11,7 @@ import {
   Chip,
   Typography,
 } from "@mui/material";
-import { WalletContext } from "../context/walletContext";
+import { WalletContext } from "../context/wallet-states";
 import { ethers } from "ethers";
 
 const HistoryTable = () => {
@@ -24,6 +24,7 @@ const HistoryTable = () => {
     if (contract) {
       fetchQuestions();
     }
+
   }, [contract]);
 
   const fetchQuestions = async () => {

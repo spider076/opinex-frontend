@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { WalletContext } from "../context/walletContext";
+import { WalletContext } from "../context/wallet-states";
 
 export const useGetQuestionById = (questionId) => {
   const { contract, account } = useContext(WalletContext);

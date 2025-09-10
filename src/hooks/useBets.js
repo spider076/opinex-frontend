@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { WalletContext } from "../context/walletContext";
+import { WalletContext } from "../context/wallet-states";
 import { ethers } from "ethers";
 
 export const useGetUserTrades = () => {

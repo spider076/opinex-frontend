@@ -9,7 +9,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { Brightness4, Brightness7 } from "@mui/icons-material";
-import { WalletContext } from "../context/walletContext";
+import { WalletContext } from "../context/wallet-states";
 import { toast } from "react-toastify";
 
 const Header = () => {
