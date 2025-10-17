@@ -22,7 +22,7 @@ contract Opinex {
     mapping(uint256 => mapping(string => uint256)) public optionStakes; // questionId => option => total
 
     uint256 public constant PENALTY_PERCENT = 10; // 10% penalty for early withdrawal
-    uint256 public constant HOUR = 3600; // 1 hour in seconds
+    uint256 public constant HOUR = 18000; // 1 hour in seconds
 
     event NewQuestion(
         uint256 indexed questionId,
@@ -122,10 +122,10 @@ contract Opinex {
         emit NewQuestion(questions.length - 1, topic, question, options);
     }
 
-    function placeBet(uint256 questionId, string calldata option)
-        external
-        payable
-    {
+    function placeBet(
+        uint256 questionId,
+        string calldata option
+    ) external payable {
         Question storage q = questions[questionId];
         require(q.isActive, "Question not active");
         require(msg.value > 0, "Bet must be > 0");
@@ -241,7 +241,9 @@ contract Opinex {
         emit QuestionResolved(questionId, q.winningOption, q.totalPool);
     }
 
-    function getQuestion(uint256 questionId)
+    function getQuestion(
+        uint256 questionId
+    )
         external
         view
         returns (
@@ -266,24 +268,22 @@ contract Opinex {
         );
     }
 
-    function getOptionStakes(uint256 questionId, string calldata option)
-        external
-        view
-        returns (uint256)
-    {
+    function getOptionStakes(
+        uint256 questionId,
+        string calldata option
+    ) external view returns (uint256) {
         return optionStakes[questionId][option];
     }
 
-    function getUserBet(uint256 questionId, address user)
-        external
-        view
-        returns (uint256 amount, string memory option)
-    {
+    function getUserBet(
+        uint256 questionId,
+        address user
+    ) external view returns (uint256 amount, string memory option) {
         return (bets[questionId][user], userChoices[questionId][user]);
     }
 
     function getQuestionsCount() public view returns (uint256) {
-        return questions.length;
+        return uint256(questions.length);
     }
 
     // Fallback to receive ETH

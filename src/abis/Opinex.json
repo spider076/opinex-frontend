@@ -1,5 +1,28 @@
 [
 	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "topic",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "questionText",
+				"type": "string"
+			},
+			{
+				"internalType": "string[]",
+				"name": "options",
+				"type": "string[]"
+			}
+		],
+		"name": "addQuestionManually",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
@@ -67,6 +90,24 @@
 		"type": "event"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "questionId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "option",
+				"type": "string"
+			}
+		],
+		"name": "placeBet",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -90,6 +131,45 @@
 		],
 		"name": "QuestionResolved",
 		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "questionId",
+				"type": "uint256"
+			}
+		],
+		"name": "resolveQuestion",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes",
+				"name": "data",
+				"type": "bytes"
+			}
+		],
+		"name": "updateQuestion",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "questionId",
+				"type": "uint256"
+			}
+		],
+		"name": "withdraw",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"anonymous": false,
@@ -117,53 +197,8 @@
 		"type": "event"
 	},
 	{
-		"inputs": [],
-		"name": "HOUR",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "PENALTY_PERCENT",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "topic",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "questionText",
-				"type": "string"
-			},
-			{
-				"internalType": "string[]",
-				"name": "options",
-				"type": "string[]"
-			}
-		],
-		"name": "addQuestionManually",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
+		"stateMutability": "payable",
+		"type": "receive"
 	},
 	{
 		"inputs": [
@@ -305,6 +340,19 @@
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "HOUR",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "uint256",
@@ -342,21 +390,16 @@
 		"type": "function"
 	},
 	{
-		"inputs": [
+		"inputs": [],
+		"name": "PENALTY_PERCENT",
+		"outputs": [
 			{
 				"internalType": "uint256",
-				"name": "questionId",
+				"name": "",
 				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "option",
-				"type": "string"
 			}
 		],
-		"name": "placeBet",
-		"outputs": [],
-		"stateMutability": "payable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -412,32 +455,6 @@
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "questionId",
-				"type": "uint256"
-			}
-		],
-		"name": "resolveQuestion",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes",
-				"name": "data",
-				"type": "bytes"
-			}
-		],
-		"name": "updateQuestion",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
 			},
@@ -457,22 +474,5 @@
 		],
 		"stateMutability": "view",
 		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "questionId",
-				"type": "uint256"
-			}
-		],
-		"name": "withdraw",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"stateMutability": "payable",
-		"type": "receive"
 	}
 ]
