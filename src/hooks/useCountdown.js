@@ -11,7 +11,7 @@ export const useCountdown = (timestamp) => {
   useEffect(() => {
     const calculateTimeLeft = () => {
       const startTime = Number(timestamp) * 1000; // Convert to milliseconds
-      const endTime = startTime + (60 * 60 * 1000); // Add 1 hour
+      const endTime = startTime + (60 * 60 * 5000); // Add 1 hour
       const now = Date.now();
       const difference = endTime - now;
 

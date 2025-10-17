@@ -50,7 +50,7 @@ const QuestionCard = ({ questionData, questionId }) => {
 
   const userBet = useGetUserTradesById(questionId);
 
-  const { topic, question, options, totalPool, isActive, timestamp  } = questionData;
+  const { topic, question, options, totalPool, isActive, timestamp } = questionData;
   const predefinedAmounts = [0.1, 0.2, 0.5, 1];
 
 
@@ -420,7 +420,7 @@ const QuestionCard = ({ questionData, questionId }) => {
           </Stack>
 
           {userBet.option ===
-          (option1Percent > option2Percent ? options[0] : options[1]) ? (
+            (option1Percent > option2Percent ? options[0] : options[1]) ? (
             <Typography
               variant="body2"
               className="text-green-400 flex items-center gap-2"
